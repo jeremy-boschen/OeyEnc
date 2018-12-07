@@ -1,0 +1,81 @@
+OeyEnc
+Copyright (C) 2004-2008 Jeremy Boschen. All rights reserved.
+Updates available at http://www.mutexed.com/code/OeyEnc/
+
+Version History
+
+x.x.x.x - ??? ??, ???
+ - Bug fixes
+ 
+1.0.600.0 Jul 19, 2008 
+- Fixed a bug which prevented the Subject registry setting from working properly
+- Fixed a bug in how some message headers are handled which was causing multi-part loading to sometimes fail 
+
+1.0.360.349 Dec 07, 2007
+- Fixed a bug in the loader which caused it to fail when attaching to a running instance of OE/WM on 32bit systems
+
+1.0.357.347 Dec 02, 2007
+- Moved association of .eml & .nws files to the Open With menu and removed the installer option
+ 
+1.0.352.346 Apr 26, 2007
+- Fixed a bug in the loader related to 64-bit process detection 
+- Added option to installer for allowing/disallowing association of .eml & .nws files
+
+1.0.351.346 Apr 25, 2007
+- Fixed a bug in the loader which broke loading .eml and .nws files when OE/WM was already running
+
+1.0.346.346 Apr 19, 2007
+- Added support for Vista x86|x64
+- Added support for opening .nws and .eml files with the loader
+- Added /username: command line option to loader
+- Removed /password, /forceload and /forcelogon command line options from loader
+- Moved source to the WDK+WSK build environment
+
+1.0.232.341 Oct 02, 2006
+- Fixed a bug with all new() allocations which expect non-throwing new behavior
+
+1.0.211.341 Sep 02, 2006
+- Fixed a bug in the yEnc decoder which could cause attribute values to be read incorrectly
+
+1.0.206.339 Aug 25, 2006
+- Removed dependency on DETOURS library
+- Added support for 64bit Windows
+
+1.0.163.278 Apr 24, 2006
+- Fixed a bug in CMemoryStreamT<>::_EnsureBuffer which caused some messages to not decode
+- Enabled HandsOffSave() support to increase performance somewhat
+- Added a Subject registry value for customizing the message subject trigger text
+
+1.0.160.270 Apr 23, 2006
+- Fixed a bug in _LoadEncodedStream() which caused an invalid data length to be passed to the decoder, and subsequently caused the decoder to fail under certain memory conditions.
+
+1.0.156.269 Apr 03, 2006
+- Minor update to improve recognition of invalid/corrupt yEnc payloads
+
+1.0.154.263 Apr 02, 2006
+- Fixed a bug in the loader which caused msimn to not be found when run for the first time
+- Fixed a bug in the loader which caused the /identity command to be ignored
+- Minor performance updates
+
+1.0.58.209 - Jan 12, 2006
+- Minor performance updates
+
+1.0.39.194 - Dec 23, 2005
+- Fixed a problem with some messages not initializing properly
+
+1.0.37.177 - Dec 22, 2005
+- Added /identity, /password, /forcelogon and /forceload command line options to the loader
+
+1.0.36.176 - Dec 18, 2005
+- Changed the installer to be aware of previously installed versions
+- Minor internal changes to how IMimeMessage is aggregated
+
+1.0.27.174 - Dec 16, 2005
+- Changed the requirement for a leading space before the text "yEnc" in the subject of a message.
+- Changed the loader to activate OE if it is already running.
+
+1.0.19.172 - Dec 12, 2005
+- Added installer
+
+1.0.3.154 - Dec 08, 2005
+- Initial release

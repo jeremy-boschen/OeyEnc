@@ -1,0 +1,22 @@
+
+
+BUILD_CONSUMES=ObjEx
+BUILD_PRODUCES=CoJack
+
+TARGETTYPE=NOTARGET
+
+SOURCES =
+
+I386_SOURCES =    \
+   i386\CjStartup4.asm  \
+   i386\CjThread.asm   \
+
+AMD64_SOURCES =   \
+   amd64\CjStartup4.asm \
+   amd64\CjThread.asm   \
+   amd64\CjThread2.asm  \
+   
+NTTARGETFILES0=OBJEX
+!IF "$(BUILD_PASS)" == "PASS2"
+NTTARGETFILES=MakeObjectDatFiles
+!ENDIF

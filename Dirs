@@ -1,0 +1,11 @@
+
+DIRS =\
+   CoJack      \
+   OeyEnc.dll  \ 
+   OeyEnc.exe  \
+   OeyEnc.wix  \
+   
+OPTIONAL_DIRS =\
+   ObjEx       \
+   BootStrap   \
+   InetComm    \

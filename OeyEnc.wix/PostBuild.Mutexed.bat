@@ -1,0 +1,3 @@
+@ECHO OFF
+
+COPY /Y %1\OeyEncSetup.exe E:\VIRTUALSERVER\SHARES\OEYENC\%2-OeyEncSetup.exe

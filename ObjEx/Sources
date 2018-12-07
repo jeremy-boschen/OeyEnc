@@ -1,0 +1,14 @@
+
+
+
+USE_LIBCMT     =  1
+TARGETTYPE     = PROGRAM
+TARGETNAME     = ObjEx
+TARGETEXT      = exe
+UMTYPE         = console
+UMENTRY        = wmain
+
+SOURCES=\
+   ObjEx.cpp   \
+   
+POST_BUILD_CMD=COPY $(OBJ_PATH)\$(O)\$(TARGETNAME).$(TARGETEXT) ..\CoJack\

@@ -1,0 +1,88 @@
+
+#rem SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION 
+
+#IF "" == "CHK" (SET OUTDIR=objchk_ )  ELSE (SET OUTDIR=objfre_ ) 
+
+#IF "" == "AMD64" (SET OUTDIR=objfre_wnet_amd64\amd64 )  ELSE (SET OUTDIR=objfre_w2k_x86\i386 ) 
+
+#MKDIR objfre_w2k_x86\i386 
+
+#DEL "objfre_w2k_x86\i386\OeyEncSource.zip"  2>nul 
+
+#COPY ..\SourceListing.txt .\ 
+        1 file(s) copied.
+
+#CALL MAKESOURCEPKG.BAT "SourceListing.txt" "objfre_w2k_x86\i386\OeyEncSource.zip 
+
+#REM
+
+#REM This script will read the SourceListing.txt file in the solution 
+
+#REM directory to create zip file containing a non-source-controled  
+
+#REM copy of the entire solution . 
+
+#REM
+
+#REM Usage: 
+
+#REM   MAKESOURCEPKG.BAT PathOfSourceListing.txt PathOfZipFileToCreate 
+
+#REM
+
+#REM Path and command line for whatever zip utility is used on the 
+
+#REM target system. 7-zip is the default 
+
+#SET ZIPUTL=C:\Program Files\7-Zip\7z.exe 
+
+#SET ZIPCMD=a -tzip D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\objfre_w2k_x86\i386\OeyEncSource.zip "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\*" 
+
+#IF EXIST D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\SourceListing.txt (
+REM Create any directories for the COPY command in the  
+ REM temp working directory  
+ REM   
+ REM In order to extract the directory names from each line  
+ REM in SourceListing.txt as relative directories a bogus  
+ REM path is constructed using the root folder of the path  
+ REM to the SourceListing.txt file  
+ IF EXIST C:\Users\Mutexed\AppData\Local\Temp\SRCLIST.TMP (DEL /Q C:\Users\Mutexed\AppData\Local\Temp\SRCLIST.TMP )  
+ FOR /F %I IN (D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\SourceListing.txt) DO (ECHO %~dI\%~I  1>>C:\Users\Mutexed\AppData\Local\Temp\SRCLIST.TMP )  
+ FOR /F %I IN (C:\Users\Mutexed\AppData\Local\Temp\SRCLIST.TMP) DO (IF NOT EXIST "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\%~pI" (
+ECHO Creating directory "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\%~pI"  
+ MKDIR "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\%~pI" 
+) )  
+ REM DEL /Q C:\Users\Mutexed\AppData\Local\Temp\SRCLIST.TMP  
+ REM Copy each file listed in SourceListing.txt to the  
+ REM temp working directory  
+ FOR /F %I IN (D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\SourceListing.txt) DO (
+ECHO Copying file %I  
+ COPY "D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\..\%I" "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\%~I"  1>nul 
+)  
+ REM Call RemoveSccInfo.js to remove the SCC provider  
+ REM information from the solution copy  
+ IF ERRORLEVEL 0 (CSCRIPT.EXE //NOLOGO RemoveSccInfo.js "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL" )  
+ REM Zip up the solution copy  
+ IF ERRORLEVEL 0 (CALL "C:\Program Files\7-Zip\7z.exe" a -tzip D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\objfre_w2k_x86\i386\OeyEncSource.zip "C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\*" ) 
+) 
+
+7-Zip [NT] 4.42  Copyright (c) 1999-2006 Igor Pavlov  2006-05-14
+Scanning
+
+
+C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\:  WARNING: The system cannot find the path specified.
+
+
+
+Creating archive D:\Projects\Programming\Active\OeyEnc.WDK\OeyEnc.wix\objfre_w2k_x86\i386\OeyEncSource.zip
+
+
+
+WARNINGS for files:
+
+C:\Users\Mutexed\AppData\Local\Temp\SRCINSTALL\ : The system cannot find the path specified.
+
+----------------
+WARNING: Cannot find 1 file
+
+#SET ERRORLEVEL=0 

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:Util="http://schemas.microsoft.com/wix/UtilExtension">
+   <?include Version.wxi?>
+
+<?if $(var._BUILDARCH) = x86?>
+   <?define var.Platform=intel?>
+   <?define var.IsWin64=no?>
+   <?define var.Edition=32-bit?>
+   <?define var.ProductId=053A1201-2AC2-43F4-9239-682C34B61707?>
+   <?define var.UpgradeCode=3FD984C5-F8B7-48CE-AC11-745469E03327?>
+   <?define var.PackageId=5305F8BC-D98E-43E1-94B7-11BEB452763C?>
+   <?define var.BspImageFileName=OeyEncSetup-x86?>
+   <?define var.ProgramsDirectory=ProgramFilesFolder?>
+<?elseif $(var._BUILDARCH) = AMD64?>
+   <?define var.Platform=amd64?>
+   <?define var.IsWin64=yes?>
+   <?define var.Edition=64-bit?>
+   <?define var.ProductId=3637F8AA-396E-43DD-A8F8-E4D43808E3ED?>
+   <?define var.UpgradeCode=C402C844-D393-4B6A-922B-52AC75B225D5?>
+   <?define var.PackageId=0EB7B61F-6580-4229-B485-3D8B8269E344?>
+   <?define var.BspImageFileName=OeyEncSetup-x64?>
+   <?define var.ProgramsDirectory=ProgramFiles64Folder?>
+<?endif?>
+
+   <Product UpgradeCode="$(var.UpgradeCode)" Name="OeyEnc" Id="$(var.ProductId)" Version="$(var.ProductVersion)" Manufacturer="jBoschen" Language="1033">
+
+      <Package Id="$(var.PackageId)" Comments="yEnc decoder plugin" Manufacturer="Jeremy Boschen" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" Platform="$(var.Platform)" />
+<?if $(var.Platform)=AMD64?>
+      <Condition Message="OeyEnc cannot be installed on this machine because the operating system does not meet the minimum requirements."><![CDATA[VersionNT64]]></Condition>
+<?else?>
+      <Condition Message="OeyEnc cannot be installed on this machine because the operating system does not meet the minimum requirements."><![CDATA[(VersionNT >= 500) AND (NOT VersionNT64)]]></Condition>
+<?endif?>
+
+<!--$$
+   
+   Application files directory
+   
+$$-->
+      <Directory Id="TARGETDIR" Name="SourceDir">
+         <Directory Id="$(var.ProgramsDirectory)">
+            <Directory Id="Directory.Programs.jBoschen" Name="jBoschen">
+               <Directory Id="INSTALLDIR" Name="OeyEnc" />
+            </Directory>
+         </Directory>
+
+         <Directory Id="DesktopFolder" Name="DESKTOP" />
+      </Directory>
+
+      <DirectoryRef Id="INSTALLDIR">
+         <Component Id="Component.History.Txt" Guid="76EA0059-E950-49DD-9C0B-5B19C617B0EF" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.History.Txt" Name="History.txt" Vital="no" DiskId="1" Source=".\History.txt" />
+         </Component>
+         <Component Id="Component.License.Txt" Guid="E8A44EB8-7FA9-4636-921E-9C7F94B91C05" KeyPath="yes" Win64="$(var.IsWin64)">
+            <File Id="File.License.Txt" Name="License.txt" Vital="no" DiskId="1" Source=".\License.txt" />
+         </Component>
+         <Component Id="Component.OeyEnc.Exe" Guid="D9AAB3C0-04DC-47D8-B06B-A13AF14F2896" KeyPath="no" Win64="$(var.IsWin64)">
+            <File Id="File.OeyEnc.Exe" Name="OeyEnc.exe" Vital="yes" KeyPath="yes"  DiskId="1" BindPath="" Source="..\OeyEnc.exe\$(var.O)\OeyEnc.exe" />
+         </Component>
+         <Component Id="Component.OeyEnc.Exe.OpenWith" Guid="3E906EB7-D578-4E75-A323-2A6381D60184" KeyPath="yes" Win64="$(var.IsWin64)">
+            <!-- Registry entries for OE shell commands used to open .eml and .nws files. These are restricted to the Open With dialog -->
+            <RegistryKey Root="HKCR" Key=".eml\OpenWithList\oeyenc.eml.exe" />
+            <RegistryKey Root="HKCR" Key="Applications\oeyenc.eml.exe\shell\open\command">
+               <RegistryValue KeyPath="no" Type="string" Value="[INSTALLDIR]OeyEnc.exe /eml:%L" />
+            </RegistryKey>
+            <RegistryKey Root="HKCR" Key=".nws\OpenWithList\oeyenc.nws.exe" />
+            <RegistryKey Root="HKCR" Key="Applications\oeyenc.nws.exe\shell\open\command">
+               <RegistryValue KeyPath="no" Type="string" Value="[INSTALLDIR]OeyEnc.exe /nws:%L" />
+            </RegistryKey>
+         </Component>
+         <Component Id="Component.OeyEnc.Dll" Guid="2B12ADEA-D622-4D47-9C49-585C83CA4EA9" KeyPath="no" Win64="$(var.IsWin64)">
+            <File Id="File.OeyEnc.Dll" Name="OeyEnc.dll" Vital="yes" KeyPath="yes"  DiskId="1" BindPath="" Source="..\OeyEnc.dll\$(var.O)\OeyEnc.dll" />
+         </Component>
+      </DirectoryRef>
+
+      <DirectoryRef Id="DesktopFolder">
+         <Component Id="Component.Shortcut.Desktop.OeyEnc" Guid="0096F518-0DBD-477C-B608-7D8DDC14D84A" KeyPath="no" Win64="$(var.IsWin64)">
+            <RegistryKey Root="HKCU" Key="Software\jBoschen\OeyEnc">
+               <RegistryValue KeyPath="yes" Type="integer" Name="Installed" Value="1" />
+            </RegistryKey>
+            <Shortcut Id="Shortcut.Desktop.OeyEnc" Directory="DesktopFolder" Name="OeyEnc Loader" Description="Loads the OeyEnc plugin." IconIndex="0" Show="normal" Target="[!File.OeyEnc.Exe]" WorkingDirectory="TARGETDIR" />
+         </Component>
+      </DirectoryRef>
+
+      <!--$$
+
+   Product features
+   
+$$-->
+
+      <!--$$ Application files  $$-->
+      <Feature Id="Feature.OeyEnc" Absent="disallow" Level="1" Title="OeyEnc Plugin" Description="Installs the OeyEnc plugin and plugin loader." Display="expand" InstallDefault="local" TypicalDefault="install" ConfigurableDirectory="INSTALLDIR">
+         <ComponentRef Id="Component.License.Txt" />
+         <ComponentRef Id="Component.History.Txt" />
+         <ComponentRef Id="Component.OeyEnc.Exe" />
+         <ComponentRef Id="Component.OeyEnc.Dll" />
+         <ComponentRef Id="Component.OeyEnc.Exe.OpenWith" />
+         <Feature Id="Feature.Shortcut.Desktop.OeyEnc" Absent="allow" Level="1" Title="Desktop Shortcut" Description="Creates a shortcut to the OeyEnc plugin loader on the desktop." Display="expand" InstallDefault="local" TypicalDefault="install">
+            <ComponentRef Id="Component.Shortcut.Desktop.OeyEnc" />
+         </Feature>
+      </Feature>
+
+      <Media Id="1" EmbedCab="yes" Cabinet="OeyEnc.cab" CompressionLevel="high" />
+
+<!--$$
+
+   User interface
+   
+$$-->
+      <UIRef Id="WixUI_Mondo" />
+      <UIRef Id="WixUI_ErrorProgressText" />
+
+      <WixVariable Id="WixUILicenseRtf" Value=".\License.rtf" />
+      <WixVariable Id="WixUIBannerBmp" Value=".\BannerBitmap.dib" />
+
+      <Icon Id="Icon.OeyEnc" SourceFile=".\OeyEnc.ico" />
+
+      <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+
+      <!-- Bootstrap.exe properties -->
+      <Property Id="BSPREMOVEPREVIOUSVERION">Yes</Property>
+      <Property Id="BSPIMAGEFILENAME">$(var.BspImageFileName)</Property>
+
+      <Property Id="PRODUCTPLATFORM">$(var.Edition)</Property>
+      <Property Id="ARPHELPLINK"><![CDATA[http://www.mutexed.com/code/OeyEnc/]]></Property>
+      <Property Id="ARPCONTACT"><![CDATA[Jeremy Boschen <j@mutexed.com>]]></Property>
+      <Property Id="ARPCOMMENTS">yEnc Decoder Plugin for Outlook Express</Property>
+      <Property Id="ARPURLINFOABOUT"><![CDATA[http://www.mutexed.com/code/OeyEnc/]]></Property>
+      <Property Id="ARPURLUPDATEINFO"><![CDATA[http://www.mutexed.com/code/OeyEnc/]]></Property>
+      <Property Id="ARPPRODUCTICON">Icon.OeyEnc</Property>
+
+      <Property Id="ALLUSERS" Secure="yes"/>
+
+      <InstallExecuteSequence>
+         <RemoveExistingProducts After="InstallInitialize" />
+         <LaunchConditions Sequence="1" />
+      </InstallExecuteSequence>
+   </Product>
+</Wix>

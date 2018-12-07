@@ -1,0 +1,20 @@
+
+
+BUILD_PRODUCES	=InetComm
+
+
+TARGETTYPE		=DYNLINK
+TARGETNAME		=inetcomm
+TARGETEXT		=dll
+DLLDEF			=InetComm.def
+
+!IF $(FREEBUILD)
+USE_NTDLL		=1
+!ENDIF
+
+TARGETLIBS= \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib  \
+
+SOURCES = \
+   MimeOle.c

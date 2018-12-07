@@ -1,0 +1,8 @@
+
+LIBRARY INETCOMM.DLL
+
+EXPORTS
+   MimeOleCreateMessage
+   MimeOleCreatePropertySet
+   MimeOleGetCharsetInfo
+   MimeOleGetExtContentType
