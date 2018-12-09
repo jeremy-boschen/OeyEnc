@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+
+<?if $(var._BUILDARCH) = X86?>
+   <?define var.Platform=Intel?>
+<?elseif $(var._BUILDARCH) = AMD64?>
+   <?define var.Platform=AMD64?>
+<?endif?>
+
+   <Product Name="BootStrap.Test" Id="1B0833F8-8780-471E-88D8-9C4ADA76EFF0" Version="0.0.0.0" Manufacturer="jBoschen" Language="1033">
+      <Package Id="420098BB-9EF0-41FD-8016-BC0708C7EA30" Comments="BootStrap Test Setup" Manufacturer="Jeremy Boschen" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" Platforms="$(var.Platform)" />
+   </Product>
+</Wix>

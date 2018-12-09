@@ -1,0 +1,54 @@
+!IF $(FREEBUILD)
+USE_MSVCRT = 1
+!ENDIF
+
+#COFFBASE_TXT_FILE = 
+#COFFBASE          = 
+
+MSC_WARNING_LEVEL = /W4
+USE_NATIVE_EH     = 1
+
+#PRECOMPILED_CXX     = 1
+#PRECOMPILED_INCLUDE = Stdafx.h
+#PRECOMPILED_OBJ     = Stdafx.obj
+#PRECOMPILED_PCH     = Stdafx.pch
+
+TARGETNAME     = BootStrap
+TARGETTYPE     = PROGRAM
+TARGETEXT      = exe
+UMTYPE         = windows
+UMENTRY        = winmain
+
+# This is not a UNICODE application, but both _UNICODE & UNICODE are defined in project.mk,
+# so they are overridden here. This will generate the following warnings when built..
+#
+#     Command line warning D9025 : overriding '/D_UNICODE' with '/U_UNICODE'
+#     Command line warning D9025 : overriding '/DUNICODE' with '/UUNICODE'
+#
+C_DEFINES      = $(C_DEFINES) /D_WIN32_MSI=200 /U_UNICODE /UUNICODE
+UNICODE        = 0
+
+POST_BUILD_CMD = 
+             
+!IF "$(BUILD_PASS)" == "PASS2"
+NTTARGETFILES=PostBuild_Target
+!ENDIF
+
+BUILD_PRODUCES = BootStrap
+
+TARGETLIBS= \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib        \
+   $(SDK_LIB_PATH)\user32.lib          \
+   $(SDK_LIB_PATH)\gdi32.lib           \
+   $(SDK_LIB_PATH)\advapi32.lib        \
+   $(SDK_LIB_PATH)\comdlg32.lib        \
+   $(SDK_LIB_PATH)\ole32.lib           \
+   $(SDK_LIB_PATH)\oleaut32.lib        \
+   $(SDK_LIB_PATH)\uuid.lib            \
+   $(SDK_LIB_PATH)\comctl32.lib        \
+   $(SDK_LIB_PATH)\msi.lib
+            
+SOURCES=\
+   BootStrap.rc   \
+   WinMain.cpp
