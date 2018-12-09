@@ -1,0 +1,58 @@
+
+!IF $(FREEBUILD)
+USE_MSVCRT        = 1
+#USE_NTDLL         = 1
+#USE_LIBCMT        = 1
+!ENDIF
+
+#COFFBASE_TXT_FILE = 
+#COFFBASE          = 
+
+MSC_WARNING_LEVEL = /W4
+USE_NATIVE_EH     = 1
+
+PRECOMPILED_CXX     = 1
+PRECOMPILED_INCLUDE = Stdafx.h
+PRECOMPILED_OBJ     = Stdafx.obj
+PRECOMPILED_PCH     = Stdafx.pch
+
+MAKEDLL     = 1
+DLLDEF      = 
+TARGETNAME  = OeyEnc
+TARGETTYPE  = DYNLINK
+TARGETEXT   = dll
+
+USE_ATL = 1
+ATL_VER = 70
+
+C_DEFINES = $(C_DEFINES) /D_WIN32_OE=0x0700
+          
+BUILD_PRODUCES=OeyEnc
+BUILD_CONSUMES=CoJack
+BUILD_CONSUMES=InetComm
+
+POST_BUILD_CMD=COPY /Y $(TARGET) ..\OeyEnc.Exe\$(O)
+
+TARGETLIBS= \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib        \
+   $(SDK_LIB_PATH)\user32.lib          \
+   $(SDK_LIB_PATH)\gdi32.lib           \
+   $(SDK_LIB_PATH)\advapi32.lib        \
+   $(SDK_LIB_PATH)\comdlg32.lib        \
+   $(SDK_LIB_PATH)\ole32.lib           \
+   $(SDK_LIB_PATH)\oleaut32.lib        \
+   $(SDK_LIB_PATH)\comctl32.lib        \
+   $(DDK_LIB_PATH)\ntdll.lib           \
+   $(SDK_LIB_PATH)\Credui.lib          \
+   $(SDK_LIB_PATH)\shlwapi.lib         \
+   $(CRT_LIB_PATH)\delayimp.lib        \
+   $(ATL_LIB_PATH)\atls.lib            \
+   $(SDK_LIB_PATH)\uuid.lib            \
+   ..\inetcomm\$(O)\inetcomm.lib       \
+            
+SOURCES= \
+   OeyEnc.dll.rc     \
+   DllMain.cpp       \
+   Module.cpp        \
+   MimeMessage.cpp   \

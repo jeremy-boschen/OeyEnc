@@ -1,0 +1,64 @@
+
+!IF $(FREEBUILD)
+USE_MSVCRT = 1
+!ENDIF
+
+#COFFBASE_TXT_FILE = 
+#COFFBASE          = 
+
+MSC_WARNING_LEVEL = /W4
+USE_NATIVE_EH     = 1
+
+#PRECOMPILED_CXX     = 1
+#PRECOMPILED_INCLUDE = Stdafx.h
+#PRECOMPILED_OBJ     = Stdafx.obj
+#PRECOMPILED_PCH     = Stdafx.pch
+
+TARGETNAME     = OeyEnc
+TARGETTYPE     = PROGRAM
+TARGETEXT      = exe
+UMTYPE         = windows
+UMENTRY        = wwinmain
+UNICODE        = 1
+
+# If and when resources are split for MUI support, this should be changed to 1
+MUI_ENABLED   =0
+
+C_DEFINES    = $(C_DEFINES) /D_WIN32_OE=0x0700 \
+!IF "$(MUI_ENABLED)"=="1"
+               /D_MUI_ENABLED
+!ENDIF
+
+LINKER_FLAGS = $(LINKER_FLAGS) /DELAYLOAD:CREDUI.DLL
+
+!IF "$(BUILD_PASS)" == "PASS2"
+NTTARGETFILES=PostBuild_Target
+!ENDIF
+
+BUILD_PRODUCES=OeyEnc.exe
+BUILD_CONSUMES=OeyEnc.dll
+BUILD_CONSUMES=CoJack
+
+TARGETLIBS= \
+   $(TARGETLIBS) \
+   $(SDK_LIB_PATH)\kernel32.lib        \
+   $(SDK_LIB_PATH)\user32.lib          \
+   $(SDK_LIB_PATH)\gdi32.lib           \
+   $(SDK_LIB_PATH)\advapi32.lib        \
+   $(SDK_LIB_PATH)\comdlg32.lib        \
+   $(SDK_LIB_PATH)\ole32.lib           \
+   $(SDK_LIB_PATH)\oleaut32.lib        \
+   $(SDK_LIB_PATH)\uuid.lib            \
+   $(SDK_LIB_PATH)\comctl32.lib        \
+   $(DDK_LIB_PATH)\ntdll.lib           \
+   $(SDK_LIB_PATH)\Credui.lib          \
+   $(SDK_LIB_PATH)\shlwapi.lib         \
+   $(CRT_LIB_PATH)\delayimp.lib        \
+   $(SDK_LIB_PATH)\psapi.lib           \
+!IF "$(MUI_ENABLED)"=="1"
+   $(WSK_LIB_PATH)\muiload.lib         \
+!ENDIF
+            
+SOURCES= \
+   OeyEnc.exe.rc  \
+   WinMain.cpp    \
